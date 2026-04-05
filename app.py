@@ -173,7 +173,7 @@ st.markdown(f"""
     background: {surface};
     border: 1px solid {border};
     border-radius: 1rem;
-    padding: .95rem 1.1rem;
+    padding: .85rem 1rem;
     margin: .1rem 0 .75rem;
     display: flex;
     align-items: center;
@@ -186,13 +186,6 @@ st.markdown(f"""
     font-size: 1.45rem;
     line-height: 1.1;
     letter-spacing: -.02em;
-  }}
-  .app-subtitle {{
-    color: {muted};
-    font-size: .77rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    font-weight: 600;
   }}
   .status-pill {{
     background: {surface};
@@ -285,7 +278,6 @@ st.markdown(f"""
   @media (max-width: 640px) {{
     .app-nav {{ padding: .85rem .9rem; }}
     .app-title {{ font-size: 1.25rem; }}
-    .app-subtitle {{ font-size: .7rem; letter-spacing: .08em; }}
     .app-footer {{ flex-direction: column; align-items: flex-start; }}
   }}
 </style>
@@ -294,16 +286,13 @@ st.markdown(f"""
 # ─────────────────────────────────────────────────────────
 # TOP BAR
 # ─────────────────────────────────────────────────────────
-st.markdown("""
-<div class="app-nav">
-  <div>
-    <div class="app-title">clone-her</div>
-    <div class="app-subtitle">Voice Cloning Studio</div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
-
-col_space, col_toggle = st.columns([9, 2])
+col_nav, col_toggle = st.columns([8, 2])
+with col_nav:
+    st.markdown("""
+    <div class="app-nav">
+      <div class="app-title">clone-her</div>
+    </div>
+    """, unsafe_allow_html=True)
 with col_toggle:
     theme_label = "Use Light" if dark else "Use Dark"
     if st.button(theme_label, key="theme_btn", use_container_width=True):
@@ -384,12 +373,18 @@ section_label("microphone-01", "Reference Voice")
 
 st.markdown('<p class="body-text">Record your voice or upload an existing clip. 6-30 seconds works best, and clean audio improves voice quality.</p>', unsafe_allow_html=True)
 
-tab_rec, tab_up = st.tabs(["Record", "Upload"])
+source = st.radio(
+  "Source",
+  options=["Record", "Upload"],
+  horizontal=True,
+  key="voice_source",
+  label_visibility="collapsed"
+)
 
 recorded_audio = None
 uploaded_file  = None
 
-with tab_rec:
+if source == "Record":
     recorded_audio = st.audio_input(
         "Record",
         label_visibility="collapsed",
@@ -398,7 +393,7 @@ with tab_rec:
     if recorded_audio:
         st.markdown('<p class="tiny-ok"><i class="hgi hgi-stroke hgi-checkmark-circle-01"></i> Recording ready</p>', unsafe_allow_html=True)
 
-with tab_up:
+if source == "Upload":
     uploaded_file = st.file_uploader(
         "Upload",
         type=["wav","mp3","m4a","ogg","flac","aac","webm","opus","mp4"],
@@ -408,14 +403,6 @@ with tab_up:
     if uploaded_file:
         st.markdown(f'<p class="tiny-ok"><i class="hgi hgi-stroke hgi-music-note-01"></i> {uploaded_file.name}</p>', unsafe_allow_html=True)
         st.audio(uploaded_file)
-
-ref_text = st.text_input(
-    "Transcript",
-    placeholder="What does the clip say? (optional — leave blank to auto-detect)",
-    key="ref_text",
-    label_visibility="collapsed"
-)
-st.markdown('<p class="hint-text">Transcript of the reference clip (optional)</p>', unsafe_allow_html=True)
 
 card_close()
 
@@ -494,7 +481,7 @@ if generate_btn and can_generate:
             def call_api(cl):
                 return cl.predict(
                     ref_audio=handle_file(ref_tmp),
-                    ref_text=ref_text.strip(),
+                  ref_text="",
                     gen_text=gen_text.strip(),
                     remove_silence=True,
                     api_name="/predict"
