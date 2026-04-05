@@ -19,25 +19,9 @@ if "audio_result"    not in st.session_state: st.session_state.audio_result    =
 dark = st.session_state.dark_mode
 
 # ─────────────────────────────────────────────────────────
-# TAILWIND CDN + FONTS + HUGEICONS
+# FONTS + ICONS
 # ─────────────────────────────────────────────────────────
 st.markdown("""
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    darkMode: 'class',
-    theme: {
-      extend: {
-        fontFamily: {
-          serif: ['DM Serif Display', 'Georgia', 'serif'],
-          sans:  ['Plus Jakarta Sans', 'sans-serif'],
-        }
-      }
-    }
-  }
-  // apply dark class to html immediately
-  document.documentElement.classList.add('dark');
-</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" rel="stylesheet"/>
 """, unsafe_allow_html=True)
@@ -57,9 +41,15 @@ accent_bg= "#27272a"  if dark else "#f4f4f5"
 st.markdown(f"""
 <style>
   /* ── shell ── */
-  .stApp                    {{ background: {bg} !important; font-family: 'Plus Jakarta Sans', sans-serif !important; }}
+  .stApp                    {{
+    background:
+      radial-gradient(1200px 500px at 90% -20%, {'rgba(16,185,129,.08)' if dark else 'rgba(24,24,27,.05)'}, transparent 60%),
+      radial-gradient(1000px 500px at -10% 0%, {'rgba(59,130,246,.08)' if dark else 'rgba(113,113,122,.05)'}, transparent 55%),
+      {bg} !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+  }}
   .stApp::before            {{ display: none !important; }}
-  .block-container          {{ max-width: 48rem !important; padding: 0 1.25rem 5rem !important; }}
+  .block-container          {{ max-width: 46rem !important; padding: .75rem 1.1rem 4.5rem !important; }}
   #MainMenu, footer, header,
   .stDeployButton, .stDecoration,
   [data-testid="stToolbar"] {{ display: none !important; }}
@@ -108,6 +98,7 @@ st.markdown(f"""
     border: 1px solid {border} !important;
     gap: 2px !important;
     padding: 3px !important;
+    margin-bottom: .55rem !important;
   }}
   .stTabs [data-baseweb="tab"] {{
     background: transparent !important;
@@ -133,6 +124,7 @@ st.markdown(f"""
     background: {surface} !important;
     color: {txt} !important;
     transition: all .15s !important;
+    min-height: 2.5rem !important;
   }}
   .stButton > button:hover {{
     background: {accent_bg} !important;
@@ -145,6 +137,7 @@ st.markdown(f"""
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-weight: 600 !important;
     border-radius: .625rem !important;
+    min-height: 2.75rem !important;
   }}
   [data-testid="baseButton-primary"]:hover {{ opacity: .85 !important; }}
 
@@ -174,35 +167,146 @@ st.markdown(f"""
   ::-webkit-scrollbar       {{ width: 5px; }}
   ::-webkit-scrollbar-track {{ background: transparent; }}
   ::-webkit-scrollbar-thumb {{ background: {border}; border-radius: 999px; }}
+
+  /* ── custom utility classes (tailwind-free) ── */
+  .app-nav {{
+    background: {surface};
+    border: 1px solid {border};
+    border-radius: 1rem;
+    padding: .95rem 1.1rem;
+    margin: .1rem 0 .75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+  }}
+  .app-title {{
+    font-family: 'DM Serif Display', serif;
+    color: {txt};
+    font-size: 1.45rem;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+  }}
+  .app-subtitle {{
+    color: {muted};
+    font-size: .77rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }}
+  .status-pill {{
+    background: {surface};
+    border: 1px solid {border};
+    border-radius: .8rem;
+    padding: .65rem .85rem;
+    margin: .15rem 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+  }}
+  .status-pill .left {{
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+  }}
+  .status-dot {{
+    width: .45rem;
+    height: .45rem;
+    border-radius: 999px;
+    display: inline-block;
+  }}
+  .status-main {{
+    color: {txt};
+    font-size: .77rem;
+    font-weight: 600;
+  }}
+  .status-side {{
+    color: {muted};
+    font-size: .75rem;
+  }}
+  .section-card {{
+    background: {surface};
+    border: 1px solid {border};
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-bottom: .9rem;
+  }}
+  .section-label {{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .55rem;
+  }}
+  .section-label i {{ color: {muted}; font-size: .95rem; }}
+  .section-label span {{
+    color: {muted};
+    font-size: .73rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }}
+  .body-text {{
+    color: {muted};
+    font-size: .9rem;
+    line-height: 1.55;
+    margin: 0 0 .7rem;
+  }}
+  .hint-text {{
+    color: {muted};
+    font-size: .73rem;
+    margin-top: .35rem;
+  }}
+  .tiny-ok {{
+    color: #10b981;
+    font-size: .75rem;
+    margin-top: .35rem;
+  }}
+  .warning-line {{
+    color: {muted};
+    font-size: .78rem;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    margin: .1rem 0 .65rem;
+  }}
+  .app-footer {{
+    border-top: 1px solid {border};
+    margin-top: 2.1rem;
+    padding-top: .9rem;
+    padding-bottom: .2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: {muted};
+    font-size: .75rem;
+    gap: .8rem;
+  }}
+  @media (max-width: 640px) {{
+    .app-nav {{ padding: .85rem .9rem; }}
+    .app-title {{ font-size: 1.25rem; }}
+    .app-subtitle {{ font-size: .7rem; letter-spacing: .08em; }}
+    .app-footer {{ flex-direction: column; align-items: flex-start; }}
+  }}
 </style>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────
-# NAVBAR  (pure Tailwind + Hugeicons)
+# TOP BAR
 # ─────────────────────────────────────────────────────────
-nav_bg     = "bg-zinc-950 border-zinc-800" if dark else "bg-white border-zinc-200"
-nav_text   = "text-zinc-100"               if dark else "text-zinc-900"
-nav_sub    = "text-zinc-600"               if dark else "text-zinc-400"
-
-st.markdown(f"""
-<nav class="{nav_bg} border-b flex items-center justify-between
-            px-6 py-3 mb-8 sticky top-0 z-50 backdrop-blur-sm"
-     style="margin-left:-1.25rem; margin-right:-1.25rem; width:calc(100% + 2.5rem);
-            font-family:'Plus Jakarta Sans',sans-serif;">
-  <span class="{nav_text} text-xl tracking-tight"
-        style="font-family:'DM Serif Display',serif;">clone-her</span>
-  <div class="flex items-center gap-4">
-    <span class="{nav_sub} text-xs font-medium tracking-widest uppercase hidden sm:block">
-      Voice Cloning Studio
-    </span>
+st.markdown("""
+<div class="app-nav">
+  <div>
+    <div class="app-title">clone-her</div>
+    <div class="app-subtitle">Voice Cloning Studio</div>
   </div>
-</nav>
+</div>
 """, unsafe_allow_html=True)
 
-# theme toggle — Streamlit button (can't be inside pure HTML)
-_, col_t = st.columns([11, 1])
-with col_t:
-    if st.button("☀" if dark else "☾", key="theme_btn", help="Toggle theme"):
+col_space, col_toggle = st.columns([9, 2])
+with col_toggle:
+    theme_label = "Use Light" if dark else "Use Dark"
+    if st.button(theme_label, key="theme_btn", use_container_width=True):
         st.session_state.dark_mode = not st.session_state.dark_mode
         st.rerun()
 
@@ -230,28 +334,24 @@ if st.session_state.client is None:
             st.stop()
 
 # connection status pill
-pill_bg = "bg-zinc-900 border-zinc-800" if dark else "bg-zinc-50 border-zinc-200"
-txt_cls = "text-zinc-300"               if dark else "text-zinc-600"
-sub_cls = "text-zinc-600"               if dark else "text-zinc-400"
-
 if st.session_state.client:
     space_short = (st.session_state.connected_space or "").split("/")[-1]
     st.markdown(f"""
-    <div class="{pill_bg} border rounded-xl px-4 py-2.5 mb-5
-                flex items-center justify-between"
-         style="font-family:'Plus Jakarta Sans',sans-serif;">
-      <div class="flex items-center gap-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-        <span class="text-xs font-medium {txt_cls}">Connected — {space_short}</span>
+    <div class="status-pill">
+      <div class="left">
+        <span class="status-dot" style="background:#10b981;"></span>
+        <span class="status-main">Connected - {space_short}</span>
       </div>
-      <span class="text-xs {sub_cls}">F5-TTS</span>
+      <span class="status-side">F5-TTS</span>
     </div>
     """, unsafe_allow_html=True)
 else:
     st.markdown(f"""
-    <div class="{pill_bg} border rounded-xl px-4 py-2.5 mb-5 flex items-center gap-2">
-      <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-      <span class="text-xs font-medium text-red-400">All spaces unavailable</span>
+    <div class="status-pill">
+      <div class="left">
+        <span class="status-dot" style="background:#ef4444;"></span>
+        <span class="status-main" style="color:#f87171;">All spaces unavailable</span>
+      </div>
     </div>
     """, unsafe_allow_html=True)
     if st.button("Reconnect", key="reconnect"):
@@ -262,21 +362,16 @@ else:
 # ─────────────────────────────────────────────────────────
 # HELPERS
 # ─────────────────────────────────────────────────────────
-card_bg  = "bg-zinc-900 border-zinc-800"  if dark else "bg-white border-zinc-200"
-lbl_cls  = "text-zinc-500"                if dark else "text-zinc-400"
-body_cls = "text-zinc-400"                if dark else "text-zinc-500"
-
 def section_label(icon, text):
     st.markdown(f"""
-    <div class="flex items-center gap-2 mb-3"
-         style="font-family:'Plus Jakarta Sans',sans-serif;">
-      <i class="hgi hgi-stroke hgi-{icon} text-sm {lbl_cls}"></i>
-      <span class="text-xs font-bold tracking-widest uppercase {lbl_cls}">{text}</span>
+    <div class="section-label">
+      <i class="hgi hgi-stroke hgi-{icon}"></i>
+      <span>{text}</span>
     </div>
     """, unsafe_allow_html=True)
 
 def card_open():
-    st.markdown(f'<div class="{card_bg} border rounded-2xl p-5 mb-4" style="font-family:\'Plus Jakarta Sans\',sans-serif;">', unsafe_allow_html=True)
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
 
 def card_close():
     st.markdown("</div>", unsafe_allow_html=True)
@@ -287,9 +382,9 @@ def card_close():
 card_open()
 section_label("microphone-01", "Reference Voice")
 
-st.markdown(f'<p class="text-sm {body_cls} mb-4 leading-relaxed">Record your voice or upload an existing clip. 6–30 seconds works best — cleaner audio = better clone.</p>', unsafe_allow_html=True)
+st.markdown('<p class="body-text">Record your voice or upload an existing clip. 6-30 seconds works best, and clean audio improves voice quality.</p>', unsafe_allow_html=True)
 
-tab_rec, tab_up = st.tabs(["  Record  ", "  Upload  "])
+tab_rec, tab_up = st.tabs(["Record", "Upload"])
 
 recorded_audio = None
 uploaded_file  = None
@@ -301,7 +396,7 @@ with tab_rec:
         key="recorder"
     )
     if recorded_audio:
-        st.markdown(f'<p class="text-xs text-emerald-500 mt-1.5 flex items-center gap-1"><i class="hgi hgi-stroke hgi-checkmark-circle-01"></i> Recording ready</p>', unsafe_allow_html=True)
+      st.markdown('<p class="tiny-ok"><i class="hgi hgi-stroke hgi-checkmark-circle-01"></i> Recording ready</p>', unsafe_allow_html=True)
 
 with tab_up:
     uploaded_file = st.file_uploader(
@@ -311,7 +406,7 @@ with tab_up:
         key="uploader"
     )
     if uploaded_file:
-        st.markdown(f'<p class="text-xs text-emerald-500 mt-1.5"><i class="hgi hgi-stroke hgi-music-note-01"></i> {uploaded_file.name}</p>', unsafe_allow_html=True)
+      st.markdown(f'<p class="tiny-ok"><i class="hgi hgi-stroke hgi-music-note-01"></i> {uploaded_file.name}</p>', unsafe_allow_html=True)
         st.audio(uploaded_file)
 
 ref_text = st.text_input(
@@ -320,7 +415,7 @@ ref_text = st.text_input(
     key="ref_text",
     label_visibility="collapsed"
 )
-st.markdown(f'<p class="text-xs {lbl_cls} mt-1">Transcript of the reference clip (optional)</p>', unsafe_allow_html=True)
+st.markdown('<p class="hint-text">Transcript of the reference clip (optional)</p>', unsafe_allow_html=True)
 
 card_close()
 
@@ -342,7 +437,7 @@ gen_text = st.text_area(
 )
 
 char_count = len(gen_text) if gen_text else 0
-st.markdown(f'<p class="text-right text-xs {lbl_cls} mt-1">{char_count} chars</p>', unsafe_allow_html=True)
+st.markdown(f'<p class="hint-text" style="text-align:right;">{char_count} chars</p>', unsafe_allow_html=True)
 card_close()
 
 # ─────────────────────────────────────────────────────────
@@ -355,7 +450,7 @@ if not can_generate:
     if not active_audio:                      missing.append("voice reference")
     if not gen_text or not gen_text.strip():  missing.append("text")
     st.markdown(f"""
-    <div class="flex items-center gap-2 {lbl_cls} text-xs mb-3">
+    <div class="warning-line">
       <i class="hgi hgi-stroke hgi-alert-02"></i>
       Missing: {' and '.join(missing)}
     </div>
@@ -468,13 +563,8 @@ if st.session_state.audio_result:
 # ─────────────────────────────────────────────────────────
 # FOOTER
 # ─────────────────────────────────────────────────────────
-ft_cls = "text-zinc-700" if dark else "text-zinc-400"
-ft_bdr = "border-zinc-800" if dark else "border-zinc-200"
-
 st.markdown(f"""
-<footer class="{ft_bdr} border-t mt-12 pt-5 pb-2
-               flex items-center justify-between text-xs {ft_cls}"
-        style="font-family:'Plus Jakarta Sans',sans-serif;">
+<footer class="app-footer">
   <span>© clone-her 2026. all rights reserved.</span>
   <span>crafted by romeiro &amp; gavin</span>
 </footer>
