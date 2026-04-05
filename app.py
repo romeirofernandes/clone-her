@@ -396,7 +396,7 @@ with tab_rec:
         key="recorder"
     )
     if recorded_audio:
-      st.markdown('<p class="tiny-ok"><i class="hgi hgi-stroke hgi-checkmark-circle-01"></i> Recording ready</p>', unsafe_allow_html=True)
+        st.markdown('<p class="tiny-ok"><i class="hgi hgi-stroke hgi-checkmark-circle-01"></i> Recording ready</p>', unsafe_allow_html=True)
 
 with tab_up:
     uploaded_file = st.file_uploader(
@@ -406,7 +406,7 @@ with tab_up:
         key="uploader"
     )
     if uploaded_file:
-      st.markdown(f'<p class="tiny-ok"><i class="hgi hgi-stroke hgi-music-note-01"></i> {uploaded_file.name}</p>', unsafe_allow_html=True)
+        st.markdown(f'<p class="tiny-ok"><i class="hgi hgi-stroke hgi-music-note-01"></i> {uploaded_file.name}</p>', unsafe_allow_html=True)
         st.audio(uploaded_file)
 
 ref_text = st.text_input(
